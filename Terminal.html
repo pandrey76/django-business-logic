@@ -1,0 +1,105 @@
+<pre><font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~</b></font>$ cd work
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work</b></font>$ cd Education
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education</b></font>$ cd python
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python</b></font>$ git clone &quot;https://github.com/alexey-goloburdin/django-clean-template.git&quot;
+Клонирование в «django-clean-template»…
+remote: Enumerating objects: 92, done.
+remote: Counting objects: 100% (92/92), done.
+remote: Compressing objects: 100% (52/52), done.
+remote: Total 92 (delta 45), reused 72 (delta 28), pack-reused 0
+Распаковка объектов: 100% (92/92), готово.
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python</b></font>$ cd django-clean-template
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python/django-clean-template</b></font>$ mv &quot;/home/admin1/work/Education/python/django-clean-template&quot; &quot;/home/admin1/work/Education/python/django-business-logic&quot;
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python</b></font>$ cd ../
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python</b></font>$ cd django-business-logic
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python/django-business-logic</b></font>$ rm -r -f .git
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python/django-business-logic</b></font>$ find . -type f -print0 | xargs -0 dos2unix
+dos2unix: преобразование файла ./.gitignore в формат Unix…
+dos2unix: преобразование файла ./README.md в формат Unix…
+dos2unix: преобразование файла ./gunicorn/empty в формат Unix…
+dos2unix: преобразование файла ./install.sh в формат Unix…
+dos2unix: преобразование файла ./src/config/urls.py в формат Unix…
+dos2unix: преобразование файла ./src/config/__init__.py в формат Unix…
+dos2unix: преобразование файла ./src/config/settings.py в формат Unix…
+dos2unix: преобразование файла ./src/config/wsgi.py в формат Unix…
+dos2unix: преобразование файла ./src/manage.py в формат Unix…
+dos2unix: преобразование файла ./systemd/gunicorn.service в формат Unix…
+dos2unix: преобразование файла ./nginx/site.conf в формат Unix…
+dos2unix: преобразование файла ./requirements.txt в формат Unix…
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python/django-business-logic</b></font>$ git init
+Инициализирован пустой репозиторий Git в /home/admin1/work/Education/python/django-business-logic/.git/
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python/django-business-logic</b></font>$ bash install.sh
+Python interpreter: python3
+Your domain without protocol (for example, google.com): localhost
+<font color="#C4A000">Cache entry deserialization failed, entry ignored</font>
+Collecting pip
+  Using cached https://files.pythonhosted.org/packages/cb/28/91f26bd088ce8e22169032100d4260614fc3da435025ff389ef1d396a433/pip-20.2.4-py2.py3-none-any.whl
+Installing collected packages: pip
+  Found existing installation: pip 9.0.1
+    Uninstalling pip-9.0.1:
+      Successfully uninstalled pip-9.0.1
+Successfully installed pip-20.2.4
+Collecting backcall==0.1.0
+  Using cached backcall-0.1.0.tar.gz (9.7 kB)
+Collecting certifi==2019.9.11
+  Using cached certifi-2019.9.11-py2.py3-none-any.whl (154 kB)
+Collecting chardet==3.0.4
+  Using cached chardet-3.0.4-py2.py3-none-any.whl (133 kB)
+Collecting decorator==4.4.0
+  Using cached decorator-4.4.0-py2.py3-none-any.whl (8.3 kB)
+Collecting Django==2.2.5
+  Using cached Django-2.2.5-py3-none-any.whl (7.5 MB)
+Collecting gunicorn==19.9.0
+  Using cached gunicorn-19.9.0-py2.py3-none-any.whl (112 kB)
+Collecting idna==2.8
+  Using cached idna-2.8-py2.py3-none-any.whl (58 kB)
+Collecting ipython==7.8.0
+  Using cached ipython-7.8.0-py3-none-any.whl (775 kB)
+Collecting ipython-genutils==0.2.0
+  Using cached ipython_genutils-0.2.0-py2.py3-none-any.whl (26 kB)
+Collecting jedi==0.15.1
+  Using cached jedi-0.15.1-py2.py3-none-any.whl (1.0 MB)
+Collecting parso==0.5.1
+  Using cached parso-0.5.1-py2.py3-none-any.whl (95 kB)
+Collecting pexpect==4.7.0
+  Using cached pexpect-4.7.0-py2.py3-none-any.whl (58 kB)
+Collecting pickleshare==0.7.5
+  Using cached pickleshare-0.7.5-py2.py3-none-any.whl (6.9 kB)
+Collecting prompt-toolkit==2.0.9
+  Using cached prompt_toolkit-2.0.9-py3-none-any.whl (337 kB)
+Collecting psycopg2==2.8.3
+  Using cached psycopg2-2.8.3.tar.gz (377 kB)
+Collecting ptyprocess==0.6.0
+  Using cached ptyprocess-0.6.0-py2.py3-none-any.whl (39 kB)
+Collecting Pygments==2.4.2
+  Using cached Pygments-2.4.2-py2.py3-none-any.whl (883 kB)
+Collecting pytz==2019.2
+  Using cached pytz-2019.2-py2.py3-none-any.whl (508 kB)
+Collecting requests==2.22.0
+  Using cached requests-2.22.0-py2.py3-none-any.whl (57 kB)
+Collecting six==1.12.0
+  Using cached six-1.12.0-py2.py3-none-any.whl (10 kB)
+Collecting sqlparse==0.3.0
+  Using cached sqlparse-0.3.0-py2.py3-none-any.whl (39 kB)
+Collecting traitlets==4.3.2
+  Using cached traitlets-4.3.2-py2.py3-none-any.whl (74 kB)
+Collecting urllib3==1.25.6
+  Using cached urllib3-1.25.6-py2.py3-none-any.whl (125 kB)
+Collecting wcwidth==0.1.7
+  Using cached wcwidth-0.1.7-py2.py3-none-any.whl (21 kB)
+Requirement already satisfied: setuptools&gt;=18.5 in ./env/lib/python3.6/site-packages (from ipython==7.8.0-&gt;-r requirements.txt (line 8)) (39.0.1)
+Using legacy &apos;setup.py install&apos; for backcall, since package &apos;wheel&apos; is not installed.
+Using legacy &apos;setup.py install&apos; for psycopg2, since package &apos;wheel&apos; is not installed.
+Installing collected packages: backcall, certifi, chardet, decorator, pytz, sqlparse, Django, gunicorn, idna, Pygments, pickleshare, ptyprocess, pexpect, parso, jedi, wcwidth, six, prompt-toolkit, ipython-genutils, traitlets, ipython, psycopg2, urllib3, requests
+    Running setup.py install for backcall ... done
+    Running setup.py install for psycopg2 ... done
+Successfully installed Django-2.2.5 Pygments-2.4.2 backcall-0.1.0 certifi-2019.9.11 chardet-3.0.4 decorator-4.4.0 gunicorn-19.9.0 idna-2.8 ipython-7.8.0 ipython-genutils-0.2.0 jedi-0.15.1 parso-0.5.1 pexpect-4.7.0 pickleshare-0.7.5 prompt-toolkit-2.0.9 psycopg2-2.8.3 ptyprocess-0.6.0 pytz-2019.2 requests-2.22.0 six-1.12.0 sqlparse-0.3.0 traitlets-4.3.2 urllib3-1.25.6 wcwidth-0.1.7
+[sudo] пароль для admin1:
+ln: указанная цель &apos;/etc/nginx/sites-enabled/&apos; не является каталогом: Нет такого файла или каталога
+ln: не удалось создать символьную ссылку &apos;/etc/systemd/system/gunicorn.service&apos;: Файл существует
+Failed to start gunicorn.service: Unit gunicorn.service not found.
+Failed to enable unit: Unit file gunicorn.service does not exist.
+Failed to restart nginx.service: Unit nginx.service not found.
+<font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python/django-business-logic</b></font>$ . env/bin/activate
+(env) <font color="#8AE234"><b>admin1@ubuntu18</b></font>:<font color="#729FCF"><b>~/work/Education/python/django-business-logic</b></font>$ cd src
+</pre>
