@@ -5,8 +5,8 @@ After=network.target
 [Service]
 User=www
 Group=www-data
-WorkingDirectory=dbms_template_path/src
-ExecStart=dbms_template_path/env/bin/gunicorn --workers 3 --bind unix:dbms_template_path/gunicorn/gunicorn.sock config.wsgi:application --access-logfile dbms_template_path/gunicorn/access.log --error-logfile dbms_template_path/gunicorn/error.log
+WorkingDirectory=/home/admin1/work/Education/python/django-business-logic/src
+ExecStart=/home/admin1/work/Education/python/django-business-logic/env/bin/gunicorn --workers 3 --bind unix:/home/admin1/work/Education/python/django-business-logic/gunicorn/gunicorn.sock config.wsgi:application --access-logfile /home/admin1/work/Education/python/django-business-logic/gunicorn/access.log --error-logfile /home/admin1/work/Education/python/django-business-logic/gunicorn/error.log
 Restart=on-failure
 
 [Install]
