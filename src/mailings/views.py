@@ -1,4 +1,7 @@
+from mailchimp3 import MailChimp
+
 from django.http import JsonResponse
+from django.conf import settings
 
 
 def add_to_common_list_view(request):
@@ -8,5 +11,17 @@ def add_to_common_list_view(request):
     if not email:
         return JsonResponse({'success': False, 'message': 'Передайте email'})
 
+    mailchimp_client = MailChimp(
+                    mc_api=settings.MAILCHIMP_API_KEY,
+                    mc_user=settings.MAILCHIMP_USERNAME)
+    # Далее нам надо добавить наш email в аудиторию common (аудиторию общих рассылок) и
+    # и навесить на него какой-нибудь общий тэг, допустим тотже Common (какой-то общий тэг)
+
+    # Данный запрос добавит наш email в аудиторию Common
+    # Первый параметр - это итдентификатор нашей аудитории
+    mailchimp_client.lists.members.create(settings.MAILCHIMP_COMMON_LIST_ID, {
+        'email_address': email,
+        'status': 'subscribed',
+    })
     # Допустим у нас простинький сервис который возвращает только такой Json.
     return JsonResponse({'success': True})
