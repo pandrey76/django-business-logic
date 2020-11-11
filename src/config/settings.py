@@ -118,3 +118,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Значения будут братся из переменных окружения
+MAILCHIMP_USERNAME = os.getenv('MAILCHIMP_USERNAME')
+MAILCHIMP_API_KEY = os.getenv('MAILCHIMP_API_KEY')

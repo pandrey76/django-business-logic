@@ -21,3 +21,54 @@ admin1@ubuntu18:~/work/Education/python/django-business-logic$ . env/bin/activat
 
 //////////////////////////////////////////////////////////////////////////////////
 
+Делаем миграции:
+
+//////////////////////////////////////////////////////////////////////////////////
+
+(env) admin1@ubuntu18:~/work/Education/python/django-business-logic/src$ ./manage.py makemigrations
+Migrations for 'cases':
+  cases/migrations/0001_initial.py
+    - Create model Case
+Migrations for 'mailings':
+  mailings/migrations/0001_initial.py
+    - Create model CommonMailingList
+    - Create model CaseMailingList
+(env) admin1@ubuntu18:~/work/Education/python/django-business-logic/src$ ./manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, cases, contenttypes, mailings, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying cases.0001_initial... OK
+  Applying mailings.0001_initial... OK
+  Applying sessions.0001_initial... OK
+
+//////////////////////////////////////////////////////////////////////////////////
+Модели данных данных есть, теперь делаем вьюшки.
+
+Рассылки у нас будут выполнятся через mailchimp, пароль и логин от mailchimp мы будем
+хранить в файле setting.py, а точнее в переменных окружения.
+
+Рассылки в mailchimp будути происходить на основании аудиторий, т.е. в mailchimp есть такое
+понятие как аудитория, это можно назвать листом рассылок. У нас будет отдельный лист рассылок
+для общих рассылок, назовём его "common", и отдельный лист рассылок, назовём его "cases", это рассылки
+для материалов по конкретным делам и в рамках этих аудиторий есть конкретные теги, при помощи которых
+мы можем разделять наших подписчиков ещё каким-то образом, другими словами мы будем навешивать еще
+какие-то тэги, т.е. например когда у нас подписывается человек на какое-то конкретное дело мы навесим ему тэг
+с идентификатором этого дела, или с названием этого дела, например чтобы в mailchimp в последствии
+мы могли настроить отдельный блок рассылок на коннкретный тэг. другими словами у нас есть аудитории и есть
+тэги.
