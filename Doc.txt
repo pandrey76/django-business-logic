@@ -13,6 +13,11 @@
 
 //////////////////////////////////////////////////////////////////////////////////
 
+admin1@ubuntu18:~/work/Education/python/django-business-logic$ . env/bin/activate
+(env) admin1@ubuntu18:~/work/Education/python/django-business-logic$ cd src
+(env) admin1@ubuntu18:~/work/Education/python/django-business-logic/src$ ./manage.py startapp cases
+(env) admin1@ubuntu18:~/work/Education/python/django-business-logic/src$ ./manage.py startapp mailings
+(env) admin1@ubuntu18:~/work/Education/python/django-business-logic/src$ ./manage.py startapp donations
 
 //////////////////////////////////////////////////////////////////////////////////
 
