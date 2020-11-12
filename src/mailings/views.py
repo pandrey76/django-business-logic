@@ -23,10 +23,8 @@ def add_to_common_list_view(request):
 
     # Данный запрос добавит наш email в аудиторию Common mailchimp
     # Первый параметр - это итдентификатор нашей аудитории
-    mailchimp_client.lists.members.create(settings.MAILCHIMP_COMMON_LIST_ID, {
-        'email_address': email,
-        'status': 'subscribed',
-    })
+    add_email_to_mailchimp_audience(audience_id=settings.MAILCHIMP_COMMON_LIST_ID, email=email)
+
     # Hash нашего клиента в mailchimp (Идентификатор нашего email в аудитории mailchimp)
     subscriber_hash = mailchimp_client \
         .search_members \
@@ -64,10 +62,8 @@ def add_to_case_list_view(request):
 
     # Данный запрос добавит наш email в аудиторию Common mailchimp
     # Первый параметр - это итдентификатор нашей аудитории
-    mailchimp_client.lists.members.create(settings.MAILCHIMP_CASE_LIST_ID, {
-        'email_address': email,
-        'status': 'subscribed',
-    })
+    add_email_to_mailchimp_audience(settings.MAILCHIMP_CASE_LIST_ID, email)
+
     # Hash нашего клиента в mailchimp (Идентификатор нашего email в аудитории mailchimp)
     subscriber_hash = mailchimp_client \
         .search_members \
@@ -92,8 +88,16 @@ def add_to_case_list_view(request):
     return JsonResponse({'success': True})
 
 
-def _get_mailchimp_client():
+def _get_mailchimp_client() -> MailChimp:
     """возвращает клиент API для работы Mailchimp"""
     return MailChimp(
         mc_api=settings.MAILCHIMP_API_KEY,
         mc_user=settings.MAILCHIMP_USERNAME)
+
+
+def add_email_to_mailchimp_audience(audience_id: str, email: str) -> None:
+    """Добавляет email в mailchimp аудиторию с идентификатором audience_id"""
+    _get_mailchimp_client().lists.members.create(audience_id, {
+        'email_address': email,
+        'status': 'subscribed',
+    })
