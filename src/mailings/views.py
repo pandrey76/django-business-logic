@@ -17,8 +17,6 @@ def add_to_common_list_view(request):
     if not email:
         return JsonResponse({'success': False, 'message': 'Передайте email'})
 
-    mailchimp_client = _get_mailchimp_client()
-
     # Далее нам надо добавить наш email в аудиторию common (аудиторию общих рассылок) и
     # и навесить на него какой-нибудь общий тэг, допустим тотже Common (какой-то общий тэг)
 
@@ -30,10 +28,9 @@ def add_to_common_list_view(request):
     subscriber_hash = _get_mailchimp_subscribed_hash(email=email)
 
     # Добавляем tag нашему клиенту (email в mailchimp)
-    mailchimp_client.lists.members.tags.update(
-        list_id=settings.MAILCHIMP_COMMON_LIST_ID,
-        subscriber_hash=subscriber_hash,
-        data={'tag': [{'name': 'COMMON TAG', 'status': 'active'}]})
+    _add_mailchimp_tag(audience_id=settings.MAILCHIMP_COMMON_LIST_ID,
+                       subscriber_hash=subscriber_hash,
+                       tag='COMMON TAG')
 
     # Добавляем email в DB
     CommonMailingList.objects.get_or_create(email=email)
@@ -55,8 +52,6 @@ def add_to_case_list_view(request):
     if not case_id:
         return JsonResponse({'success': False, 'message': 'Передайте case_id'})
 
-    mailchimp_client = _get_mailchimp_client()
-
     # Данный запрос добавит наш email в аудиторию Common mailchimp
     # Первый параметр - это итдентификатор нашей аудитории
     _add_email_to_mailchimp_audience(settings.MAILCHIMP_CASE_LIST_ID, email)
@@ -69,10 +64,9 @@ def add_to_case_list_view(request):
     case_tag = f'Case {case.name}'
 
     # Добавляем tag нашему клиенту (email в mailchimp)
-    mailchimp_client.lists.members.tags.update(
-        list_id=settings.MAILCHIMP_CASE_CASE_ID,
-        subscriber_hash=subscriber_hash,
-        data={'tag': [{'name': case_tag, 'status': 'active'}]})
+    _add_mailchimp_tag(audience_id=settings.MAILCHIMP_CASE_LIST_ID,
+                       subscriber_hash=subscriber_hash,
+                       tag=case_tag)
 
     # Добавляем email в DB
     CaseMailingList.objects.get_or_create(email=email, case=case)
@@ -109,3 +103,11 @@ def _get_mailchimp_subscribed_hash(email: str) -> Optional[str]:
         return None
     return members[0].get('id')
 
+
+def _add_mailchimp_tag(audience_id: str, subscriber_hash: str, tag: str) -> None:
+    """Добавляет тег tag для email с идентификатором subscriber_hash
+     в аудиторию audience_id"""
+    _get_mailchimp_client().lists.members.tags.update(
+        list_id=audience_id,
+        subscriber_hash=subscriber_hash,
+        data={'tag': [{'name': tag, 'status': 'active'}]})
