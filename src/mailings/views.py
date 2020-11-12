@@ -24,12 +24,9 @@ def add_to_common_list_view(request):
     # Первый параметр - это итдентификатор нашей аудитории
     _add_email_to_mailchimp_audience(audience_id=settings.MAILCHIMP_COMMON_LIST_ID, email=email)
 
-    # Hash нашего клиента в mailchimp (Идентификатор нашего email в аудитории mailchimp)
-    subscriber_hash = _get_mailchimp_subscribed_hash(email=email)
-
     # Добавляем tag нашему клиенту (email в mailchimp)
     _add_mailchimp_tag(audience_id=settings.MAILCHIMP_COMMON_LIST_ID,
-                       subscriber_hash=subscriber_hash,
+                       subscriber_hash=_get_mailchimp_subscribed_hash(email=email),
                        tag='COMMON TAG')
 
     # Добавляем email в DB
@@ -56,16 +53,13 @@ def add_to_case_list_view(request):
     # Первый параметр - это итдентификатор нашей аудитории
     _add_email_to_mailchimp_audience(settings.MAILCHIMP_CASE_LIST_ID, email)
 
-    # Hash нашего клиента в mailchimp (Идентификатор нашего email в аудитории mailchimp)
-    subscriber_hash = _get_mailchimp_subscribed_hash(email=email)
-
     # Мы получаем дело из базы данных
     case = Case.objects.get(pk=case_id)
     case_tag = f'Case {case.name}'
 
     # Добавляем tag нашему клиенту (email в mailchimp)
     _add_mailchimp_tag(audience_id=settings.MAILCHIMP_CASE_LIST_ID,
-                       subscriber_hash=subscriber_hash,
+                       subscriber_hash=_get_mailchimp_subscribed_hash(email=email),
                        tag=case_tag)
 
     # Добавляем email в DB
