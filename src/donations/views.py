@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
-from mailings.mailchimp_services import add_mailchimp_email_with_tag
+from src.mailings.mailchimp_services import add_mailchimp_email_with_tag
+
 
 # Вебхук, который пришёл о факте успешной оплаты из какой-нибудь платёжной системы
 # нащей системы Донатов.
