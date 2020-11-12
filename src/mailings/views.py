@@ -6,6 +6,7 @@ from django.conf import settings
 
 from .models import CommonMailingList, CaseMailingList
 from cases.models import Case
+from .mailchimp_services import add_mailchimp_email_with_tag
 
 
 def add_to_common_list_view(request):
@@ -14,14 +15,17 @@ def add_to_common_list_view(request):
     email = request.GET.get('email')
 
     # Проверяем, что он не пустой
+    # Логика по проверки входных данных может находится во слое вьюшки.
+    # Это просто валидация данных, а не бизнес длогика
     if not email:
         return JsonResponse({'success': False, 'message': 'Передайте email'})
 
-    _add_mailchimp_email_with_tag(audience_id=settings.MAILCHIMP_COMMON_LIST_ID,
-                                  email=email,
-                                  tag='COMMON TAG')
+    add_mailchimp_email_with_tag(audience_id=settings.MAILCHIMP_COMMON_LIST_ID,
+                                 email=email,
+                                 tag='COMMON TAG')
 
-    # Добавляем email в DB
+    # Добавляем email в DB, т.к. мы хотим чтобы данный email сохранился не только в mailchimp
+    # аудитории, но и в нашей базе данных.
     CommonMailingList.objects.get_or_create(email=email)
 
     # Допустим у нас простинький сервис который возвращает только такой Json.
@@ -45,58 +49,11 @@ def add_to_case_list_view(request):
     case = Case.objects.get(pk=case_id)
     case_tag = f'Case {case.name}'
 
-    _add_mailchimp_email_with_tag(audience_id=settings.MAILCHIMP_CASE_LIST_ID,
-                                  email=email,
-                                  tag=case_tag)
+    add_mailchimp_email_with_tag(audience_id=settings.MAILCHIMP_CASE_LIST_ID,
+                                 email=email,
+                                 tag=case_tag)
     # Добавляем email в DB
     CaseMailingList.objects.get_or_create(email=email, case=case)
 
     # Допустим у нас простинький сервис который возвращает только такой Json.
     return JsonResponse({'success': True})
-
-
-def _get_mailchimp_client() -> MailChimp:
-    """возвращает клиент API для работы Mailchimp"""
-    return MailChimp(
-        mc_api=settings.MAILCHIMP_API_KEY,
-        mc_user=settings.MAILCHIMP_USERNAME)
-
-
-def _add_email_to_mailchimp_audience(audience_id: str, email: str) -> None:
-    """Добавляет email в mailchimp аудиторию с идентификатором audience_id"""
-    _get_mailchimp_client().lists.members.create(audience_id, {
-        'email_address': email,
-        'status': 'subscribed',
-    })
-
-
-# def _get_mailchimp_subscribed_hash(email: str) -> Union[str, None]:
-def _get_mailchimp_subscribed_hash(email: str) -> Optional[str]:
-    """Возвращает идентификатор email в Mailchimp или None,
-     если email там не найден """
-    members = _get_mailchimp_client()  \
-        .search_members \
-        .get(query=email, fields='exact_matches.members.id') \
-        .get('exact_matches') \
-        .get('members')
-    if not members:
-        return None
-    return members[0].get('id')
-
-
-def _add_mailchimp_tag(audience_id: str, subscriber_hash: str, tag: str) -> None:
-    """Добавляет тег tag для email с идентификатором subscriber_hash
-     в аудиторию audience_id"""
-    _get_mailchimp_client().lists.members.tags.update(
-        list_id=audience_id,
-        subscriber_hash=subscriber_hash,
-        data={'tag': [{'name': tag, 'status': 'active'}]})
-
-
-def _add_mailchimp_email_with_tag(audience_id: str, email: str, tag: str) -> None:
-    """Добавляет в Mailchimp email в аудиторию c идентификатором audience_id"""
-    _add_email_to_mailchimp_audience(audience_id=audience_id,
-                                     email=email)
-    _add_mailchimp_tag(audience_id=audience_id,
-                       subscriber_hash=_get_mailchimp_subscribed_hash(email=email),
-                       tag=tag)
