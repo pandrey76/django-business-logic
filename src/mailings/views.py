@@ -3,6 +3,8 @@ from mailchimp3 import MailChimp
 from django.http import JsonResponse
 from django.conf import settings
 
+from .models import CommonMailingList
+
 
 def add_to_common_list_view(request):
     """Веб-сервис добавляющий email в общий лист рассылки в mailchimp"""
@@ -38,6 +40,9 @@ def add_to_common_list_view(request):
         list_id=settings.MAILCHIMP_COMMON_LIST_ID,
         subscriber_hash=subscriber_hash,
         data={'tag': [{'name': 'COMMON TAG', 'status': 'active'}]})
+
+    # Добавляем email в DB
+    CommonMailingList.objects.get_or_create(email=email)
 
     # Допустим у нас простинький сервис который возвращает только такой Json.
     return JsonResponse({'success': True})
