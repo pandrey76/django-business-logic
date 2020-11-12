@@ -1,3 +1,4 @@
+from typing import Optional
 from mailchimp3 import MailChimp
 
 from django.http import JsonResponse
@@ -23,14 +24,10 @@ def add_to_common_list_view(request):
 
     # Данный запрос добавит наш email в аудиторию Common mailchimp
     # Первый параметр - это итдентификатор нашей аудитории
-    add_email_to_mailchimp_audience(audience_id=settings.MAILCHIMP_COMMON_LIST_ID, email=email)
+    _add_email_to_mailchimp_audience(audience_id=settings.MAILCHIMP_COMMON_LIST_ID, email=email)
 
     # Hash нашего клиента в mailchimp (Идентификатор нашего email в аудитории mailchimp)
-    subscriber_hash = mailchimp_client \
-        .search_members \
-        .get(query=email, fields='exact_matches.members.id') \
-        .get('exact_matches') \
-        .get('members')[0].get('id')
+    subscriber_hash = _get_mailchimp_subscribed_hash(email=email)
 
     # Добавляем tag нашему клиенту (email в mailchimp)
     mailchimp_client.lists.members.tags.update(
@@ -62,14 +59,10 @@ def add_to_case_list_view(request):
 
     # Данный запрос добавит наш email в аудиторию Common mailchimp
     # Первый параметр - это итдентификатор нашей аудитории
-    add_email_to_mailchimp_audience(settings.MAILCHIMP_CASE_LIST_ID, email)
+    _add_email_to_mailchimp_audience(settings.MAILCHIMP_CASE_LIST_ID, email)
 
     # Hash нашего клиента в mailchimp (Идентификатор нашего email в аудитории mailchimp)
-    subscriber_hash = mailchimp_client \
-        .search_members \
-        .get(query=email, fields='exact_matches.members.id') \
-        .get('exact_matches') \
-        .get('members')[0].get('id')
+    subscriber_hash = _get_mailchimp_subscribed_hash(email=email)
 
     # Мы получаем дело из базы данных
     case = Case.objects.get(pk=case_id)
@@ -95,9 +88,24 @@ def _get_mailchimp_client() -> MailChimp:
         mc_user=settings.MAILCHIMP_USERNAME)
 
 
-def add_email_to_mailchimp_audience(audience_id: str, email: str) -> None:
+def _add_email_to_mailchimp_audience(audience_id: str, email: str) -> None:
     """Добавляет email в mailchimp аудиторию с идентификатором audience_id"""
     _get_mailchimp_client().lists.members.create(audience_id, {
         'email_address': email,
         'status': 'subscribed',
     })
+
+
+# def _get_mailchimp_subscribed_hash(email: str) -> Union[str, None]:
+def _get_mailchimp_subscribed_hash(email: str) -> Optional[str]:
+    """Возвращает идентификатор email в Mailchimp или None,
+     если email там не найден """
+    members = _get_mailchimp_client()  \
+        .search_members \
+        .get(query=email, fields='exact_matches.members.id') \
+        .get('exact_matches') \
+        .get('members')
+    if not members:
+        return None
+    return members[0].get('id')
+
