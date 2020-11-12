@@ -6,11 +6,11 @@ from mailchimp3 import MailChimp
 from django.conf import settings
 
 
-def add_mailchimp_email_with_tag(audience_id: str, email: str, tag: str) -> None:
-    """Добавляет в Mailchimp email в аудиторию c идентификатором audience_id"""
-    _add_email_to_mailchimp_audience(audience_id=audience_id,
+def add_mailchimp_email_with_tag(audience_name: str, email: str, tag: str) -> None:
+    """Добавляет в Mailchimp email в аудиторию c названием audience_name"""
+    _add_email_to_mailchimp_audience(audience_id=settings.MAILCHIMP_AUDIENCES.get(audience_name),
                                      email=email)
-    _add_mailchimp_tag(audience_id=audience_id,
+    _add_mailchimp_tag(audience_id=settings.MAILCHIMP_AUDIENCES.get(audience_name),
                        subscriber_hash=_get_mailchimp_subscribed_hash(email=email),
                        tag=tag)
 

@@ -2,7 +2,6 @@ from typing import Optional
 from mailchimp3 import MailChimp
 
 from django.http import JsonResponse
-from django.conf import settings
 
 from .models import CommonMailingList, CaseMailingList
 from cases.models import Case
@@ -20,7 +19,7 @@ def add_to_common_list_view(request):
     if not email:
         return JsonResponse({'success': False, 'message': 'Передайте email'})
 
-    add_mailchimp_email_with_tag(audience_id=settings.MAILCHIMP_COMMON_LIST_ID,
+    add_mailchimp_email_with_tag(audience_name='COMMON',
                                  email=email,
                                  tag='COMMON TAG')
 
@@ -49,7 +48,7 @@ def add_to_case_list_view(request):
     case = Case.objects.get(pk=case_id)
     case_tag = f'Case {case.name}'
 
-    add_mailchimp_email_with_tag(audience_id=settings.MAILCHIMP_CASE_LIST_ID,
+    add_mailchimp_email_with_tag(audience_name='CASES',
                                  email=email,
                                  tag=case_tag)
     # Добавляем email в DB

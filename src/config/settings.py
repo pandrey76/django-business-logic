@@ -122,5 +122,7 @@ STATIC_URL = '/static/'
 # Значения будут братся из переменных окружения
 MAILCHIMP_USERNAME = os.getenv('MAILCHIMP_USERNAME')
 MAILCHIMP_API_KEY = os.getenv('MAILCHIMP_API_KEY')
-MAILCHIMP_COMMON_LIST_ID = '12345'
-MAILCHIMP_CASE_LIST_ID = '222333'
+MAILCHIMP_AUDIENCES = {
+    'COMMON': '12345',
+    'CASES':  '222333'
+}
