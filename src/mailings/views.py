@@ -17,17 +17,9 @@ def add_to_common_list_view(request):
     if not email:
         return JsonResponse({'success': False, 'message': 'Передайте email'})
 
-    # Далее нам надо добавить наш email в аудиторию common (аудиторию общих рассылок) и
-    # и навесить на него какой-нибудь общий тэг, допустим тотже Common (какой-то общий тэг)
-
-    # Данный запрос добавит наш email в аудиторию Common mailchimp
-    # Первый параметр - это итдентификатор нашей аудитории
-    _add_email_to_mailchimp_audience(audience_id=settings.MAILCHIMP_COMMON_LIST_ID, email=email)
-
-    # Добавляем tag нашему клиенту (email в mailchimp)
-    _add_mailchimp_tag(audience_id=settings.MAILCHIMP_COMMON_LIST_ID,
-                       subscriber_hash=_get_mailchimp_subscribed_hash(email=email),
-                       tag='COMMON TAG')
+    _add_mailchimp_email_with_tag(audience_id=settings.MAILCHIMP_COMMON_LIST_ID,
+                                  email=email,
+                                  tag='COMMON TAG')
 
     # Добавляем email в DB
     CommonMailingList.objects.get_or_create(email=email)
@@ -49,19 +41,13 @@ def add_to_case_list_view(request):
     if not case_id:
         return JsonResponse({'success': False, 'message': 'Передайте case_id'})
 
-    # Данный запрос добавит наш email в аудиторию Common mailchimp
-    # Первый параметр - это итдентификатор нашей аудитории
-    _add_email_to_mailchimp_audience(settings.MAILCHIMP_CASE_LIST_ID, email)
-
     # Мы получаем дело из базы данных
     case = Case.objects.get(pk=case_id)
     case_tag = f'Case {case.name}'
 
-    # Добавляем tag нашему клиенту (email в mailchimp)
-    _add_mailchimp_tag(audience_id=settings.MAILCHIMP_CASE_LIST_ID,
-                       subscriber_hash=_get_mailchimp_subscribed_hash(email=email),
-                       tag=case_tag)
-
+    _add_mailchimp_email_with_tag(audience_id=settings.MAILCHIMP_CASE_LIST_ID,
+                                  email=email,
+                                  tag=case_tag)
     # Добавляем email в DB
     CaseMailingList.objects.get_or_create(email=email, case=case)
 
@@ -105,3 +91,12 @@ def _add_mailchimp_tag(audience_id: str, subscriber_hash: str, tag: str) -> None
         list_id=audience_id,
         subscriber_hash=subscriber_hash,
         data={'tag': [{'name': tag, 'status': 'active'}]})
+
+
+def _add_mailchimp_email_with_tag(audience_id: str, email: str, tag: str) -> None:
+    """Добавляет в Mailchimp email в аудиторию c идентификатором audience_id"""
+    _add_email_to_mailchimp_audience(audience_id=audience_id,
+                                     email=email)
+    _add_mailchimp_tag(audience_id=audience_id,
+                       subscriber_hash=_get_mailchimp_subscribed_hash(email=email),
+                       tag=tag)
