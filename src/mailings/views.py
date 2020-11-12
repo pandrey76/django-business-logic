@@ -16,10 +16,8 @@ def add_to_common_list_view(request):
     if not email:
         return JsonResponse({'success': False, 'message': 'Передайте email'})
 
-    # Создаём mailchimp клиент
-    mailchimp_client = MailChimp(
-        mc_api=settings.MAILCHIMP_API_KEY,
-        mc_user=settings.MAILCHIMP_USERNAME)
+    mailchimp_client = _get_mailchimp_client()
+
     # Далее нам надо добавить наш email в аудиторию common (аудиторию общих рассылок) и
     # и навесить на него какой-нибудь общий тэг, допустим тотже Common (какой-то общий тэг)
 
@@ -62,12 +60,7 @@ def add_to_case_list_view(request):
     if not case_id:
         return JsonResponse({'success': False, 'message': 'Передайте case_id'})
 
-    # Создаём mailchimp клиент
-      mailchimp_client = MailChimp(
-        mc_api=settings.MAILCHIMP_API_KEY,
-        mc_user=settings.MAILCHIMP_USERNAME)
-    # Далее нам надо добавить наш email в аудиторию common (аудиторию общих рассылок) и
-    # и навесить на него какой-нибудь общий тэг, допустим тотже Common (какой-то общий тэг)
+    mailchimp_client = _get_mailchimp_client()
 
     # Данный запрос добавит наш email в аудиторию Common mailchimp
     # Первый параметр - это итдентификатор нашей аудитории
@@ -98,3 +91,9 @@ def add_to_case_list_view(request):
     # Допустим у нас простинький сервис который возвращает только такой Json.
     return JsonResponse({'success': True})
 
+
+def _get_mailchimp_client():
+    """возвращает клиент API для работы Mailchimp"""
+    return MailChimp(
+        mc_api=settings.MAILCHIMP_API_KEY,
+        mc_user=settings.MAILCHIMP_USERNAME)
